@@ -13,10 +13,6 @@ library(tidyverse)
 library(psrcplot)
 library(echarts4r)
 
-# Packages for Map Creation
-library(sf)
-library(leaflet)
-
 # Packages for Table Creation
 library(DT)
 

@@ -22,7 +22,7 @@ shinyUI(
                            .navbar {min-height:25px !important;}'))
              ),
     
-    windowTitle = "Mode to Work - PSRC Regin=on", 
+    windowTitle = "Mode to Work - PSRC Region", 
     theme = "styles.css",
     position = "fixed-top",
              

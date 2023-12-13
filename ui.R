@@ -33,8 +33,7 @@ shinyUI(
                       column(8, style='padding-left:25px; padding-right:50px;',
                              mode_overview_ui('modeOverview'),
                              hr(style = "border-top: 1px solid #000000;"),
-                             commute_modes_ui('CommuteMode'),
-                             hr(style = "border-top: 1px solid #000000;")
+                             commute_modes_ui('CommuteMode')
                              ), # End of Main Panel Modes
                       ), # End of Main Panel Fluid Row for Modes Tab
              ),# End of Tab Panel for Modes

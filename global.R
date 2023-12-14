@@ -42,4 +42,3 @@ year_list <- as.character(unique(commute_data$year))
 
 # Data Download Table List ------------------------------------------------------
 download_table_list <- list("Sources" = source_info, "Mode to Work" = commute_data)
-  

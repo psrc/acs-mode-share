@@ -122,22 +122,9 @@ echart_line_chart <- function(df, x, y, fill, tog, dec, esttype, color, y_min=0)
   } # end of percent format
   
   if (esttype == "currency") {
-    c <- c %>%
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(style="currency", digits = dec, currency = "USD")) %>%
-      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter(style="currency", digits = 0, currency = "USD")) %>%
-      echarts4r::e_tooltip(formatter =  htmlwidgets::JS("
-      function(params, ticket, callback) {
-      var fmt = new Intl.NumberFormat('en',
-      {\"style\":\"currency\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n
-      var idx = 0;\n
-      if (params.name == params.value[0]) {\n
-      idx = 1;\n        }\n
-      return('<strong>' + params.seriesName '<br>' + 
-      params.marker + ' ' +\n
-      params.name + ': ' + fmt.format(parseFloat(params.value[idx]))
-      )
-      }")
-      )
+    c <- c |> 
+      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(style="currency", digits = dec, currency = "USD")) |>
+      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter(style="currency", digits = 0, currency = "USD")) 
     
   } # end of currency format
   
@@ -259,7 +246,7 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
       echarts4r::e_tooltip(formatter =  htmlwidgets::JS("
       function(params, ticket, callback) {
       var fmt = new Intl.NumberFormat('en',
-      {\"style\":\"percent\",\"minimumFractionDigits\":1,\"maximumFractionDigits\":1,\"currency\":\"USD\"});\n
+      {\"style\":\"percent\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n
       var idx = 0;\n
       if (params.name == params.value[0]) {\n
       idx = 1;\n        }\n

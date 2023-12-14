@@ -53,7 +53,7 @@ commute_modes_server <- function(id) {
     
     output$wages_chart <- renderEcharts4r({echart_line_chart(df=commute_data |> filter(geography=="Region" & metric=="Mean Salary by Mode"),
                                                              x='year', y='estimate', fill='variable', tog = 'metric',
-                                                             esttype="number", color = "jewel", dec = 0)})
+                                                             esttype="currency", color = "jewel", dec = 0)})
     
     output$race_chart <- renderEcharts4r({echart_line_chart(df=commute_data |> filter(metric=="Commute Mode by Race" & variable==input$Mode & geography %in% c(input$Race, "White")),
                                                             x='year', y='share', fill='geography', tog = 'variable',

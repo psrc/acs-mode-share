@@ -44,6 +44,8 @@ commute_modes_server <- function(id) {
     
     output$race_text <- renderText({page_information(tbl=page_text, page_name="Modes", page_section = "Modes-Race", page_info = "description")})
     
+    output$aapi_text <- renderText({page_information(tbl=page_text, page_name="Modes", page_section = "Modes-AAPI", page_info = "description")})
+    
     # Charts
     output$modes_chart <- renderEcharts4r({echart_line_chart(df=commute_data |> filter(geography=="Region" & metric=="Commute Mode"),
                                                              x='year', y='share', fill='variable', tog = 'metric',
@@ -57,31 +59,49 @@ commute_modes_server <- function(id) {
                                                             x='year', y='share', fill='geography', tog = 'variable',
                                                             esttype="percent", color = "jewel", dec = 0) })
     
+    output$aapi_chart <- renderEcharts4r({echart_bar_chart(df=commute_data |> 
+                                                             filter(metric=="Commute Mode by Asian Ancestry" & year==input$Year & variable==input$AAPIMode) |> 
+                                                             arrange(share) |> 
+                                                             mutate(geography = str_wrap(geography, width=15)), 
+                                                           tog = 'variable', y='share', x='geography', esttype="percent", dec=0, color = 'greens', title = "Commute Share")})
+    
     # Tab layout
     output$modes <- renderUI({
       tagList(
-        h1("Commute Modes the PSRC Region"),
+        h1("PSRC Region"),
         textOutput(ns("modes_text")) |> withSpinner(color=load_clr),
         fluidRow(column(12,echarts4rOutput(ns("modes_chart")))),
         br(),
         tags$div(class="chart_source","Source: U.S. Census Bureau, American Community Survey (ACS) 1-Year Data Table B08301"),
         hr(style = "border-top: 1px solid #000000;"),
         
-        h1("Average Wages by Commute Mode"),
-        textOutput(ns("wages_text")),
-        fluidRow(column(12,echarts4rOutput(ns("wages_chart")))),
-        br(),
-        tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables WAGEP & JWTR"),
-        hr(style = "border-top: 1px solid #000000;"),
-        
-        h1("Commute Mode by Race & Ethnicity"),
+        h1("Race & Ethnicity"),
         textOutput(ns("race_text")),
+        br(),
         fluidRow(column(6, selectInput(ns("Mode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home")),
                  column(6, selectInput(ns("Race"), label="Select Race/Ethnicity:", choices=race_list, selected = "Black or African American"))),
         fluidRow(column(12,echarts4rOutput(ns("race_chart")))),
         br(),
         tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & PRACE"),
+        hr(style = "border-top: 1px solid #000000;"),
+        
+        h1("Asian Americans and Pacific Islanders (AAPI)"),
+        textOutput(ns("aapi_text")),
+        br(),
+        fluidRow(column(6, selectInput(ns("Year"), label="Select Year:", choices=year_list, selected = "2022")),
+                 column(6, selectInput(ns("AAPIMode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home"))),
+        fluidRow(column(12,echarts4rOutput(ns("aapi_chart"), height = '600px'))),
+        br(),
+        tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & RAC2P"),
+        hr(style = "border-top: 1px solid #000000;"),
+        
+        h1("Average Wage"),
+        textOutput(ns("wages_text")),
+        fluidRow(column(12,echarts4rOutput(ns("wages_chart")))),
+        br(),
+        tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables WAGEP & JWTR"),
         hr(style = "border-top: 1px solid #000000;")
+        
         
       )
     }) # end of UI

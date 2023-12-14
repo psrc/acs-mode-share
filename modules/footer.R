@@ -42,7 +42,7 @@ footer_server <- function(id) {
         
         strong(a(class = "footer_title", "Connect with PSRC: ")),
         a(class = "footer_url", href="https://www.facebook.com/PugetSoundRegionalCouncil", icon("facebook"), target="_blank"),
-        a(class = "footer_url", href="https://twitter.com/SoundRegion", icon("twitter"), target="_blank"),
+        a(class = "footer_url", href="https://twitter.com/SoundRegion", icon("x-twitter"), target="_blank"),
         a(class = "footer_url", href="https://www.instagram.com/soundregion/", icon("instagram"), target="_blank"),
         a(class = "footer_url", href="https://www.linkedin.com/company/soundregion", icon("linkedin"), target="_blank"),
         a(class = "footer_url", href="mailto:info@psrc.org?", icon("envelope")),

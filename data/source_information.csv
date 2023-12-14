@@ -1,3 +1,4 @@
 ﻿Data Point,Subject,Source,Dates
-Mode to Work,Modes,"ACS 1yr Data Table B08301 for King, Kitsap, Pierce and Snohomish counties","2010-2019, 2021, 2022"
-Mode to Work,Modes,"ACS 5yr Data Table B08301 for King, Kitsap, Pierce and Snohomish counties",2020
+Mode to Work: Region,Modes,"ACS 1yr Data Table B08301 for King, Kitsap, Pierce and Snohomish counties","2006-2019, 2021-2022"
+Mode to Work: by Wage,Modes,"PUMS 1yr Data variables WAGEP & JWTR (JWTRNS 2019-onward) fur PUMA's in  King, Kitsap, Pierce and Snohomish counties","2006-2019, 2021-2022"
+Mode to Work: by Race,Modes,"PUMS 1yr Data variables RACEP & JWTR (JWTRNS 2019-onward) fur PUMA's in  King, Kitsap, Pierce and Snohomish counties","2006-2019, 2021-2022"

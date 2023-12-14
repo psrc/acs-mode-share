@@ -37,7 +37,7 @@ commute_data <- readRDS("data/commute_data.rds")
 
 # Values for Drop-Downs ---------------------------------------------------
 travel_modes_list <- as.character(unique(commute_data$variable))
-race_list <- as.character(unique(commute_data |> select("geography") |> filter(!(geography %in% c("King County", "Kitsap County", "Pierce County", "Snohomish County", "Region", "White alone"))) |> pull()))
+race_list <- as.character(unique(commute_data |> select("geography") |> filter(!(geography %in% c("King County", "Kitsap County", "Pierce County", "Snohomish County", "Region", "White"))) |> pull()))
 
 # Data Download Table List ------------------------------------------------------
 download_table_list <- list("Sources" = source_info, "Mode to Work" = commute_data)

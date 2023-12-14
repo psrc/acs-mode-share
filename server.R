@@ -6,9 +6,9 @@ shinyServer(function(input, output) {
   
   # Modes Page
   banner_server('modeBanner', 
-                banner_title = "ACS Commute Mode to Work", 
-                banner_subtitle = "Regional Transportation Plan",
-                banner_url = "https://www.psrc.org/planning-2050/regional-transportation-plan")
+                banner_title = "Mode to Work", 
+                banner_subtitle = "Puget Sound Trends",
+                banner_url = "https://www.psrc.org/puget-sound-trends")
   
   left_panel_server('leftMode', page_nm = "Modes")
   mode_overview_server('modeOverview')
@@ -19,7 +19,7 @@ shinyServer(function(input, output) {
   
   # Data Download
   output$downloadData <- downloadHandler(
-    filename = "PSRC RTP Monitoring Data Download.xlsx",
+    filename = "PSRC-Commute-Mode-Data.xlsx",
     content = function(file) {saveWorkbook(create_public_spreadsheet(download_table_list), file = file)},
     contentType = "application/Excel"
   )

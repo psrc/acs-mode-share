@@ -166,5 +166,5 @@ commute_data <- bind_rows(c, e) |>
   mutate(variable = factor(variable, levels = mode_order)) |>
   arrange(year, geography, variable)
 
-saveRDS(commute_data, "C:/coding/acs-mode-share/data/commute_data.rds")
+saveRDS(commute_data, "data/commute_data.rds")
 

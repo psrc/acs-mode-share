@@ -46,6 +46,8 @@ commute_modes_server <- function(id) {
     
     output$aapi_text <- renderText({page_information(tbl=page_text, page_name="Modes", page_section = "Modes-AAPI", page_info = "description")})
     
+    output$occupations_text <- renderText({page_information(tbl=page_text, page_name="Modes", page_section = "Modes-Occupation", page_info = "description")})
+    
     # Charts
     output$modes_chart <- renderEcharts4r({echart_line_chart(df=commute_data |> filter(geography=="Region" & metric=="Commute Mode"),
                                                              x='year', y='share', fill='variable', tog = 'metric',
@@ -60,10 +62,16 @@ commute_modes_server <- function(id) {
                                                             esttype="percent", color = "jewel", dec = 0) })
     
     output$aapi_chart <- renderEcharts4r({echart_bar_chart(df=commute_data |> 
-                                                             filter(metric=="Commute Mode by Asian Ancestry" & year==input$Year & variable==input$AAPIMode) |> 
+                                                             filter(metric=="Commute Mode by Asian Ancestry" & year==input$AAPIYear & variable==input$AAPIMode) |> 
                                                              arrange(share) |> 
                                                              mutate(geography = str_wrap(geography, width=15)), 
                                                            tog = 'variable', y='share', x='geography', esttype="percent", dec=0, color = 'greens', title = "Commute Share")})
+    
+    output$occupations_chart <- renderEcharts4r({echart_bar_chart(df=commute_data |> 
+                                                                    filter(metric=="Commute Mode by Occupation" & year==input$OccYear & variable==input$OccMode) |> 
+                                                                    arrange(share) |> 
+                                                                    mutate(geography = str_wrap(geography, width=15)), 
+                                                                  tog = 'variable', y='share', x='geography', esttype="percent", dec=0, color = 'blues', title = "Commute Share")})
     
     # Tab layout
     output$modes <- renderUI({
@@ -88,11 +96,21 @@ commute_modes_server <- function(id) {
         h1("Asian Americans and Pacific Islanders (AAPI)"),
         textOutput(ns("aapi_text")),
         br(),
-        fluidRow(column(6, selectInput(ns("Year"), label="Select Year:", choices=year_list, selected = "2022")),
+        fluidRow(column(6, selectInput(ns("AAPIYear"), label="Select Year:", choices=year_list, selected = "2022")),
                  column(6, selectInput(ns("AAPIMode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home"))),
         fluidRow(column(12,echarts4rOutput(ns("aapi_chart"), height = '600px'))),
         br(),
         tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & RAC2P"),
+        hr(style = "border-top: 1px solid #000000;"),
+        
+        h1("Occupations"),
+        textOutput(ns("occupations_text")),
+        br(),
+        fluidRow(column(6, selectInput(ns("OccYear"), label="Select Year:", choices=year_list, selected = "2022")),
+                 column(6, selectInput(ns("OccMode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home"))),
+        fluidRow(column(12,echarts4rOutput(ns("occupations_chart"), height = '600px'))),
+        br(),
+        tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & OCCP"),
         hr(style = "border-top: 1px solid #000000;"),
         
         h1("Average Wage"),

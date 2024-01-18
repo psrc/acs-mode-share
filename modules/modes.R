@@ -82,8 +82,8 @@ commute_modes_server <- function(id) {
         tags$div(class="chart_source","Source: U.S. Census Bureau, American Community Survey (ACS) 1-Year Data Table B08301"),
         hr(style = "border-top: 1px solid #000000;"),
         
-        h1("Race & Ethnicity"),
-        textOutput(ns("race_text")),
+        h1("Mode to Work by Race & Ethnicity"),
+        htmlOutput(ns("race_text")),
         br(),
         fluidRow(column(6, selectInput(ns("Mode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home")),
                  column(6, selectInput(ns("Race"), label="Select Race/Ethnicity:", choices=race_list, selected = "Black or African American"))),
@@ -93,7 +93,7 @@ commute_modes_server <- function(id) {
         hr(style = "border-top: 1px solid #000000;"),
         
         h1("Asian Americans and Pacific Islanders (AAPI)"),
-        textOutput(ns("aapi_text")),
+        htmlOutput(ns("aapi_text")),
         br(),
         fluidRow(column(6, selectInput(ns("AAPIYear"), label="Select Year:", choices=year_list, selected = "2022")),
                  column(6, selectInput(ns("AAPIMode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home"))),
@@ -102,8 +102,8 @@ commute_modes_server <- function(id) {
         tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & RAC2P"),
         hr(style = "border-top: 1px solid #000000;"),
         
-        h1("Occupations"),
-        textOutput(ns("occupations_text")),
+        h1("Mode to Work by Occupation"),
+        htmlOutput(ns("occupations_text")),
         br(),
         fluidRow(column(6, selectInput(ns("OccYear"), label="Select Year:", choices=year_list, selected = "2022")),
                  column(6, selectInput(ns("OccMode"), label="Select Commute Mode:", choices=travel_modes_list, selected = "Work from Home"))),
@@ -112,8 +112,8 @@ commute_modes_server <- function(id) {
         tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables JWTR & OCCP"),
         hr(style = "border-top: 1px solid #000000;"),
         
-        h1("Average Wage"),
-        textOutput(ns("wages_text")),
+        h1("Average Wage by Commute Mode"),
+        htmlOutput(ns("wages_text")),
         fluidRow(column(12,echarts4rOutput(ns("wages_chart")))),
         br(),
         tags$div(class="chart_source","Source: U.S. Census Bureau, Public Use Microdata Sample (PUMS) 1-Year Data Variables WAGEP & JWTR"),

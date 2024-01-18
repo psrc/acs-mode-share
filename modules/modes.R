@@ -17,14 +17,13 @@ mode_overview_server <- function(id) {
     # Overview UI
     output$modeoverview <- renderUI({
       tagList(
-        textOutput(ns("overview_text")),
-        br()
+        htmlOutput(ns("overview_text"))
       )
     })
   })  # end moduleServer
 }
 
-# Climate Tabs --------------------------------------------------------------------------------
+# Tabs --------------------------------------------------------------------------------
 commute_modes_ui <- function(id) {
   ns <- NS(id)
   
@@ -76,8 +75,8 @@ commute_modes_server <- function(id) {
     # Tab layout
     output$modes <- renderUI({
       tagList(
-        h1("PSRC Region"),
-        textOutput(ns("modes_text")) |> withSpinner(color=load_clr),
+        h1("Mode to Work in the PSRC Region"),
+        htmlOutput(ns("modes_text")) |> withSpinner(color=load_clr),
         fluidRow(column(12,echarts4rOutput(ns("modes_chart")))),
         br(),
         tags$div(class="chart_source","Source: U.S. Census Bureau, American Community Survey (ACS) 1-Year Data Table B08301"),

@@ -12,12 +12,14 @@ h1 {
   color: #34343c;
   font-size: 1.75em;
   font-weight: 300;
+  font-family: "Poppins";
 }
 
 h2 {
-  font-weight: 16pt;
+  font-size: 1.50em;
+  font-weight: 275;
   font-family: "Poppins";
-  color: #2F3030;
+  color: #34343c;
 }
 
 h3 {

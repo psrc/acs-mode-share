@@ -1,0 +1,39 @@
+﻿variable,simple_label,label
+B08301_001,Total,Total
+B08301_003,Drove Alone,Drove Alone
+B08301_004,Carpooled,Carpooled
+B08301_010,Transit,Transit
+B08301_016,Other,Taxi
+B08301_017,Other,Motorcycle
+B08301_018,Bike,Bike
+B08301_019,Walk,Walk
+B08301_020,Other,Other
+B08301_021,Work from Home,Work from Home
+B08303_001,Total,Total
+B08303_002,Less than 15 minutes,Less than 5 minutes
+B08303_003,Less than 15 minutes,5 to 9 minutes
+B08303_004,15 to 30 minutes,10 to 14 minutes
+B08303_005,15 to 30 minutes,15 to 19 minutes
+B08303_006,15 to 30 minutes,20 to 24 minutes
+B08303_007,15 to 30 minutes,25 to 29 minutes
+B08303_008,30 to 45 minutes,30 to 34 minutes
+B08303_009,30 to 45 minutes,35 to 39 minutes
+B08303_010,30 to 45 minutes,40 to 44 minutes
+B08303_011,45 to 60 minutes,45 to 59 minutes
+B08303_012,more than 60 minutes,60 to 89 minutes
+B08303_013,more than 60 minutes,90 or more minutes
+B08011_001,Total,Total
+B08011_002,Overnight,0:00 to 05:00
+B08011_003,Early Morning,05:00 to 05:30
+B08011_004,Early Morning,05:30 to  06:00
+B08011_005,Early Morning,06:00 to 06:30
+B08011_006,Early Morning,06:30 to 07:00
+B08011_007,AM Peak,07:00 to 07:30
+B08011_008,AM Peak,07:30 to 08:00
+B08011_009,AM Peak,08:00 to 08:30
+B08011_010,AM Peak,08:30 to 09:00
+B08011_011,Late Morning,09:00 to 10:00
+B08011_012,Late Morning,10:00 to 11:00
+B08011_013,Late Morning,11:00 to 12:00
+B08011_014,Afternoon,12:00 to 16:00
+B08011_015,Evening,16:00 to 0:00

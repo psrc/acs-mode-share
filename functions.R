@@ -1,5 +1,18 @@
 echarts4r::e_common(font_family = "Poppins")
 
+tooltip_js <- "
+      function(params, ticket, callback) {
+      var fmt = new Intl.NumberFormat('en',
+      {\"style\":\"percent\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n
+      var idx = 0;\n
+      if (params.name == params.value[0]) {\n
+      idx = 1;\n        }\n
+      return(params.seriesName + '<br>' + 
+      params.marker + ' ' +\n
+      params.name + ': ' + fmt.format(parseFloat(params.value[idx]))
+      )
+      }"
+
 # General Information -------------------------------------------------------------
 page_information <- function(tbl, page_name, page_section=NULL, page_info) {
   
@@ -157,57 +170,20 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
     e_toolbox_feature("dataView") |>
     e_toolbox_feature("saveAsImage")
   
-  if (color == "blues") {
-    
-    c <- c |>
-      echarts4r::e_bar_(y, 
-                        name = title,
-                        itemStyle = list(color = htmlwidgets::JS("
-                      function(params) {var colorList = ['#BFE9E7', '#73CFCB', '#40BDB8', '#00A7A0', '#00716c', '#005753'];
-                                                               return colorList[params.dataIndex]}"))) 
-  }
+  color_ramp <- switch(color,
+                       "blues" = c('#BFE9E7', '#73CFCB', '#40BDB8', '#00A7A0', '#00716c', '#005753'),
+                       "greens" = c('#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E'),
+                       "oranges" = c('#FBD6C9', '#F7A489', '#F4835E', '#F05A28', '#9f3913', '#7a2700'),
+                       "purples" = c('#E3C9E3', '#C388C2', '#AD5CAB', '#91268F', '#630460', '#4a0048'),
+                       "jewel" = c('#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040','#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040', '#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040'))
   
-  if (color == "greens") {
-    
-    c <- c |>
-      echarts4r::e_bar_(y, 
-                        name = title,
-                        itemStyle = list(color = htmlwidgets::JS("
-                      function(params) {var colorList = ['#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E', '#8CC63E'];
-                                                               return colorList[params.dataIndex]}"))) 
-  }
+  palette <- paste0('"', paste(color_ramp, collapse='", "'), '"')
+  js_color <- paste0("function(params) {var colorList = [", palette, "]; return colorList[params.dataIndex]}")
   
-  if (color == "oranges") {
-    
-    c <- c |>
-      echarts4r::e_bar_(y, 
-                        name = title,
-                        itemStyle = list(color = htmlwidgets::JS("
-                      function(params) {var colorList = ['#FBD6C9', '#F7A489', '#F4835E', '#F05A28', '#9f3913', '#7a2700'];
-                                                               return colorList[params.dataIndex]}"))) 
-  }
-  
-  if (color == "purples") {
-    
-    c <- c |>
-      echarts4r::e_bar_(y, 
-                        name = title,
-                        itemStyle = list(color = htmlwidgets::JS("
-                      function(params) {var colorList = ['#E3C9E3', '#C388C2', '#AD5CAB', '#91268F', '#630460', '#4a0048'];
-                                                               return colorList[params.dataIndex]}"))) 
-  }
-  
-  if (color == "jewel") {
-    
-    c <- c |>
-      echarts4r::e_bar_(y, 
-                        name = title,
-                        itemStyle = list(color = htmlwidgets::JS("
-                      function(params) {var colorList = ['#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040','#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040', '#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040'];
-                                                               return colorList[params.dataIndex]}"))) 
-  }
-  
-  c <- c |> 
+  c <- c %>%
+    echarts4r::e_bar_(y,
+                      name = title,
+                      itemStyle = list(color = htmlwidgets::JS(js_color))) |>
     echarts4r::e_grid(left = '20%', top = top_padding, bottom = bottom_padding) %>%
     echarts4r::e_x_axis(axisTick=list(show = FALSE)) %>%
     echarts4r::e_show_loading() %>%
@@ -239,48 +215,22 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
   
   
   # Format the Axis and Hover Text
-  if (esttype == "percent") {
-    c <- c |>
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter("percent", digits = dec)) |>
-      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter("percent", digits = 0)) |>
-      echarts4r::e_tooltip(formatter =  htmlwidgets::JS("
-      function(params, ticket, callback) {
-      var fmt = new Intl.NumberFormat('en',
-      {\"style\":\"percent\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n
-      var idx = 0;\n
-      if (params.name == params.value[0]) {\n
-      idx = 1;\n        }\n
-      return(params.seriesName + '<br>' + 
-      params.marker + ' ' +\n
-      params.name + ': ' + fmt.format(parseFloat(params.value[idx]))
-      )
-      }")
-      )
+  if(esttype == "number") {
+    c <- c |> echarts4r::e_tooltip(trigger = "item")
     
-  } # end of percent format
-  
-  if (esttype == "currency") {
-    c <- c |>
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(style="currency", digits = dec, currency = "USD")) |>
-      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter(style="currency", digits = 0, currency = "USD")) |>
-      echarts4r::e_tooltip(formatter =  htmlwidgets::JS("
-      function(params, ticket, callback) {
-      var fmt = new Intl.NumberFormat('en',
-      {\"style\":\"currency\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n
-      var idx = 0;\n
-      if (params.name == params.value[0]) {\n
-      idx = 1;\n        }\n
-      return(params.marker + ' ' +\n
-      params.seriesName + ': ' + fmt.format(parseFloat(params.value[idx]))
-      )
-      }")
-      )
+  } else {
     
-  } # end of currency format
-  
-  if (esttype == "number") {
+    if(esttype == "currency") {
+      curr <- "USD"
+    } else {
+      curr <- NULL
+    }
+    
     c <- c |>
-      echarts4r::e_tooltip(trigger = "item")
+      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(esttype, digits = dec)) |>
+      echarts4r::e_tooltip(trigger = "item",
+                           formatter =  echarts4r::e_tooltip_item_formatter(style = esttype, digits = 0, currency = curr)) |>
+      echarts4r::e_tooltip(formatter =  htmlwidgets::JS(tooltip_js))
   }
   
   c <- c |>

@@ -13,6 +13,53 @@ tooltip_js <- "
       )
       }"
 
+timeline_opts <- function(e) {
+  e |>
+    echarts4r::e_timeline_opts(autoPlay = FALSE,
+                               tooltip = list(show=FALSE),
+                               axis_type = "category",
+                               top = 15,
+                               right = 200,
+                               left = 200,
+                               #currentIndex = 2,
+                               controlStyle=FALSE,
+                               lineStyle=FALSE,
+                               label = list(show=TRUE,
+                                            interval = 0,
+                                            color='#4C4C4C',
+                                            fontFamily = 'Poppins'),
+                               itemStyle = list(color='#BCBEC0'),
+                               checkpointStyle = list(label = list(show=FALSE),
+                                                      color='#4C4C4C',
+                                                      animation = FALSE),
+                               progress = list(label = list(show=FALSE),
+                                               itemStyle = list (color='#BCBEC0')),
+                               emphasis = list(label = list(show=FALSE),
+                                               itemStyle = list (color='#4C4C4C')))
+  
+} 
+
+format_opts <- function(e, esttype, dec) {
+  if(esttype == "number") {
+    e <- e |> echarts4r::e_tooltip(trigger = "item")
+    
+  } else {
+    
+    if(esttype == "currency") {
+      curr <- "USD"
+    } else {
+      curr <- NULL
+    }
+    
+    e <- e |>
+      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(esttype, digits = dec)) |>
+      echarts4r::e_tooltip(trigger = "item",
+                           formatter =  echarts4r::e_tooltip_item_formatter(style = esttype, digits = 0, currency = curr)) |>
+      echarts4r::e_tooltip(formatter =  htmlwidgets::JS(tooltip_js))
+  }
+  return(e)
+}
+
 # General Information -------------------------------------------------------------
 page_information <- function(tbl, page_name, page_section=NULL, page_info) {
   
@@ -90,61 +137,10 @@ echart_line_chart <- function(df, x, y, fill, tog, dec, esttype, color, y_min=0)
     echarts4r::e_legend(show = TRUE, bottom=0)
   
   # Add in the Timeseries Selector
-  c <- c %>%
-    echarts4r::e_timeline_opts(autoPlay = FALSE,
-                               tooltip = list(show=FALSE),
-                               axis_type = "category",
-                               top = 15,
-                               right = 200,
-                               left = 200,
-                               #currentIndex = 2,
-                               controlStyle=FALSE,
-                               lineStyle=FALSE,
-                               label = list(show=TRUE,
-                                            interval = 0,
-                                            color='#4C4C4C',
-                                            fontFamily = 'Poppins'),
-                               itemStyle = list(color='#BCBEC0'),
-                               checkpointStyle = list(label = list(show=FALSE),
-                                                      color='#4C4C4C',
-                                                      animation = FALSE),
-                               progress = list(label = list(show=FALSE),
-                                               itemStyle = list (color='#BCBEC0')),
-                               emphasis = list(label = list(show=FALSE),
-                                               itemStyle = list (color='#4C4C4C')))
+  c <- timeline_opts(c)
   
   # Format the Axis and Hover Text
-  if (esttype == "percent") {
-    c <- c %>%
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter("percent", digits = dec)) %>%
-      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter("percent", digits = 0)) %>%
-      echarts4r::e_tooltip(formatter =  htmlwidgets::JS("
-      function(params, ticket, callback) {
-      var fmt = new Intl.NumberFormat('en',
-      {\"style\":\"percent\",\"minimumFractionDigits\":1,\"maximumFractionDigits\":1,\"currency\":\"USD\"});\n
-      var idx = 0;\n
-      if (params.name == params.value[0]) {\n
-      idx = 1;\n        }\n
-      return(params.seriesName + '<br>' + 
-      params.marker + ' ' +\n
-      params.name + ': ' + fmt.format(parseFloat(params.value[idx]))
-      )
-      }")
-      )
-    
-  } # end of percent format
-  
-  if (esttype == "currency") {
-    c <- c |> 
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(style="currency", digits = dec, currency = "USD")) |>
-      echarts4r::e_tooltip(trigger = "item", formatter =  echarts4r::e_tooltip_item_formatter(style="currency", digits = 0, currency = "USD")) 
-    
-  } # end of currency format
-  
-  if (esttype == "number") {
-    c <- c %>%
-      echarts4r::e_tooltip(trigger = "item")
-  }
+  c <- format_opts(c, esttype, dec)
   
   c <- c |> echarts4r::e_y_axis(min=y_min)
   
@@ -175,7 +171,7 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
                        "greens" = rep('#8CC63E', 12),
                        "oranges" = c('#FBD6C9', '#F7A489', '#F4835E', '#F05A28', '#9f3913', '#7a2700'),
                        "purples" = c('#E3C9E3', '#C388C2', '#AD5CAB', '#91268F', '#630460', '#4a0048'),
-                       "jewel" = c('#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040','#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040', '#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040'))
+                       "jewel" = rep(c('#91268F', '#F05A28', '#8CC63E', '#00A7A0', '#4C4C4C', '#630460', '#9f3913', '#588527', '#00716c', '#3e4040'), 3))
   
   palette <- paste0('"', paste(color_ramp, collapse='", "'), '"')
   js_color <- paste0("function(params) {var colorList = [", palette, "]; return colorList[params.dataIndex]}")
@@ -190,49 +186,11 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
     echarts4r::e_legend(show = FALSE)
   
   # Add in the Timeseries Selector
-  c <- c |>
-    echarts4r::e_timeline_opts(autoPlay = FALSE,
-                               tooltip = list(show=FALSE),
-                               axis_type = "category",
-                               top = 15,
-                               right = 200,
-                               left = 200,
-                               #currentIndex = 2,
-                               controlStyle=FALSE,
-                               lineStyle=FALSE,
-                               label = list(show=TRUE,
-                                            interval = 0,
-                                            color='#4C4C4C',
-                                            fontFamily = 'Poppins'),
-                               itemStyle = list(color='#BCBEC0'),
-                               checkpointStyle = list(label = list(show=FALSE),
-                                                      color='#4C4C4C',
-                                                      animation = FALSE),
-                               progress = list(label = list(show=FALSE),
-                                               itemStyle = list (color='#BCBEC0')),
-                               emphasis = list(label = list(show=FALSE),
-                                               itemStyle = list (color='#4C4C4C')))
-  
+  c <- timeline_opts(c)
   
   # Format the Axis and Hover Text
-  if(esttype == "number") {
-    c <- c |> echarts4r::e_tooltip(trigger = "item")
+  c <- format_opts(c, esttype, dec)
     
-  } else {
-    
-    if(esttype == "currency") {
-      curr <- "USD"
-    } else {
-      curr <- NULL
-    }
-    
-    c <- c |>
-      echarts4r::e_y_axis(formatter = echarts4r::e_axis_formatter(esttype, digits = dec)) |>
-      echarts4r::e_tooltip(trigger = "item",
-                           formatter =  echarts4r::e_tooltip_item_formatter(style = esttype, digits = 0, currency = curr)) |>
-      echarts4r::e_tooltip(formatter =  htmlwidgets::JS(tooltip_js))
-  }
-  
   c <- c |>
     e_flip_coords()
   

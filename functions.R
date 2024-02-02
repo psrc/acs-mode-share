@@ -60,6 +60,25 @@ format_opts <- function(e, esttype, dec) {
   return(e)
 }
 
+e_basics <- function(e, top_padding, bottom_padding, legend) {
+  e <- e |>
+    echarts4r::e_grid(left = '15%', top = top_padding, bottom = bottom_padding) |>
+    echarts4r::e_x_axis(axisTick=list(show = FALSE)) |>
+    echarts4r::e_show_loading()
+    
+    if(legend == TRUE) {
+      e <- e |> 
+        echarts4r::e_legend(show = TRUE, bottom=0)
+    } else {
+      e <- e |> 
+        echarts4r::e_legend(show = FALSE)
+    }
+  
+  return(e)
+}
+
+
+
 # General Information -------------------------------------------------------------
 page_information <- function(tbl, page_name, page_section=NULL, page_info) {
   
@@ -78,7 +97,6 @@ page_information <- function(tbl, page_name, page_section=NULL, page_info) {
       pull()
     
   }
-  
   
   if(is.na(t)) {f <- ""} else {f <- t}
   
@@ -129,12 +147,9 @@ echart_line_chart <- function(df, x, y, fill, tog, dec, esttype, color, y_min=0)
       echarts4r::e_line_(fill_items, smooth = FALSE)
   }
   
-  c <- c %>% 
-    echarts4r::e_color(chart_color) %>%
-    echarts4r::e_grid(left = '15%', top = top_padding, bottom = bottom_padding) %>%
-    echarts4r::e_x_axis(axisTick=list(show = FALSE)) %>%
-    echarts4r::e_show_loading() %>%
-    echarts4r::e_legend(show = TRUE, bottom=0)
+  c <- c |> 
+    echarts4r::e_color(chart_color) |>
+    e_basics(top_padding, bottom_padding, legend = TRUE)
   
   # Add in the Timeseries Selector
   c <- timeline_opts(c)
@@ -176,14 +191,11 @@ echart_bar_chart <- function(df, x, y, tog, title, dec, esttype, color) {
   palette <- paste0('"', paste(color_ramp, collapse='", "'), '"')
   js_color <- paste0("function(params) {var colorList = [", palette, "]; return colorList[params.dataIndex]}")
   
-  c <- c %>%
+  c <- c %>% 
     echarts4r::e_bar_(y,
                       name = title,
                       itemStyle = list(color = htmlwidgets::JS(js_color))) |>
-    echarts4r::e_grid(left = '20%', top = top_padding, bottom = bottom_padding) %>%
-    echarts4r::e_x_axis(axisTick=list(show = FALSE)) %>%
-    echarts4r::e_show_loading() %>%
-    echarts4r::e_legend(show = FALSE)
+    e_basics(top_padding, bottom_padding, legend = FALSE)
   
   # Add in the Timeseries Selector
   c <- timeline_opts(c)
